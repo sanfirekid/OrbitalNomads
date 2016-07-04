@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Nomad Travels!</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap-4.0.0-alpha.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/jumbotron.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+      <div class="container-fluid">
+      <div class="navbar-header">
+      <a class="navbar-brand" href="/">Nomads</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/#about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/#contact">Contact</a>
+        </li>
+        {% if user_nickname %}
+        <li class="nav-item">
+        <a class="nav-link" href="/post">Post</a>
+        </li>
+        {% endif %}
+      </ul>
+      
+      <div style="float:right"> 
+        
+        {% if user_nickname %}
+        <ul class="nav navbar-nav">
+        <li>    
+            <span> {{ user_nickname }} <a href="{{ logout }}">logout</a></span>
+        </li>
+        </ul>	
+        {% else %}
+        <ul class="nav navbar-nav">
+        <li>    
+            <span> Login with <a href="#"><img src="../images/google.png"></a></span>
+        </li>
+        </ul>
+        {% endif %}
+        </div>
+        </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1 class="display-3">Nomads Travels!</h1>
+        <p>Search for your preferred location!</p>
+        <!-- add a search bar-->
+        <form class="navbar-search pull-left">
+  <input type="text" class="search-query" placeholder="Search">
+</form>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+       <div class="col-md-12">
+	     <p> Your user profile and image here.</p>
+	</div>
+      </div>
+      </div>
+
+
+      <hr>
+
+      <footer>
+        <p>&copy; Company 2015</p>
+      </footer>
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="bootstrap-4.0.0-alpha.2/dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>
