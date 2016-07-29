@@ -64,17 +64,17 @@
 
 <div class="container">
       <!-- Example row of columns -->
-       <form>
+       <form action="/post" method="post">
   <div class="form-group row">
     <label for="location" class="col-sm-2 form-control-label">Location/Activity</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="location" placeholder="Enter Location Here!">
+      <input type="text" class="form-control" name="location" placeholder="Enter Location Here!">
     </div>
   </div>
   <div class="form-group row">
     <label for="review" class="col-sm-2 form-control-label">Review</label>
     <div class="col-sm-10">
-      <textarea class="form-control" id="review" rows="5" placeholder="Enter Comments Here!"></textarea> 
+      <textarea class="form-control" name="review" rows="5" placeholder="Enter Comments Here!"></textarea> 
     </div>
   </div>
   <div class="form-group row">
@@ -82,31 +82,31 @@
     <div class="col-sm-10">
       <div class="radio">
         <label class="radio-inline">
-          <input type="radio" name="ratingRadios" id="ratingRadio1" value="rating1" checked>
+          <input type="radio" name="ratings" value="1" checked>
           1
         </label>
       </div>
       <div class="radio">
         <label class="radio-inline">
-          <input type="radio" name="ratingRadios" id="ratingRadio2" value="rating2" checked>
+          <input type="radio" name="ratings" value="2" checked>
           2
         </label>
       </div>
       <div class="radio">
         <label class="radio-inline">
-          <input type="radio" name="ratingRadios" id="ratingRadio3" value="rating3" checked>
+          <input type="radio" name="ratings" value="3" checked>
           3
         </label>
       </div>
       <div class="radio">
         <label class="radio-inline">
-          <input type="radio" name="ratingRadios" id="ratingRadio4" value="rating4" checked>
+          <input type="radio" name="ratings" value="4" checked>
           4
         </label>
       </div>
       <div class="radio">
         <label class="radio-inline">
-          <input type="radio" name="ratingRadios" id="ratingRadio5" value="rating5" checked>
+          <input type="radio" name="ratings" value="5" checked>
           5
         </label>
       </div>

@@ -23,18 +23,24 @@ class MainPage(webapp2.RequestHandler):
     """ Handler for the front page."""
 
     def get(self):
+        review_query = Reviews.query()
+        reviews = review_query.fetch(10)
+
         user = users.get_current_user()
-        
         if user: # signed in
             template_values = {
                 'user_nickname': users.get_current_user().nickname(),
                 'logout': users.create_logout_url(self.request.host_url),
+                'reviews': reviews
                 }
             template = jinja_environment.get_template('index.html')
             self.response.out.write(template.render(template_values))
         else:
+            template_values = {
+                'reviews': reviews
+                }
             template = jinja_environment.get_template('index.html')
-            self.response.out.write(template.render())
+            self.response.out.write(template.render(template_values))
 
 class LoginSucessPage(webapp2.RequestHandler):
 
@@ -59,9 +65,10 @@ class PostReview(webapp2.RequestHandler):
         self.response.out.write(template.render(template_values))
 
     def post(self):
-        review = Reviews(author=users.get_current_user.nickname(),
+        review = Reviews(author=users.get_current_user().nickname(),
                          location=self.request.get('location'),
-                         review=self.request.get('review'), rating=3)
+                         Review=self.request.get('review'),
+                         Rating=int(self.request.get('ratings')))
         review.put()
         template_values = {
             'user_nickname': users.get_current_user().nickname(),
