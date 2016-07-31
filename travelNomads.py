@@ -16,6 +16,7 @@ jinja_environment = jinja2.Environment(
 
 class Reviews(ndb.Model):
     author = ndb.StringProperty()
+    country = ndb.StringProperty()
     location = ndb.StringProperty()
     Review = ndb.StringProperty()
     Rating = ndb.IntegerProperty()
@@ -74,6 +75,7 @@ class PostReview(webapp2.RequestHandler):
 
     def post(self):
         review = Reviews(author=users.get_current_user().nickname(),
+                         country=self.request.get('country'),
                          location=self.request.get('location'),
                          Review=self.request.get('review'),
                          Rating=int(self.request.get('ratings')))
@@ -99,11 +101,12 @@ class ViewReviews(webapp2.RequestHandler):
             template_values = {
                 'user_nickname': users.get_current_user().nickname(),
                 'logout': users.create_logout_url(self.request.host_url),
+                'country': review.country,
                 'author': review.author,
                 'location': review.location,
                 'review': review.Review,
                 'rating': review.Rating,
-                'date': adjusted_date.strftime("%H:%M %Y-%m-%d %Z"),
+                'date': adjusted_date.strftime("%H:%M %d-%m-%Y %Z"),
                 }
                 
             template = jinja_environment.get_template('reviewsIndividual.html')

@@ -14,7 +14,7 @@
     <link href="bootstrap-4.0.0-alpha.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/jumbotronpost.css" rel="stylesheet">
+    <link href="css/jumbotron.css" rel="stylesheet">
   </head>
 
   <body>
@@ -34,24 +34,34 @@
         <li class="nav-item">
           <a class="nav-link" href="/#contact">Contact</a>
         </li>
+        {% if user_nickname %}
         <li class="nav-item">
         <a class="nav-link" href="/post">Post</a>
         </li>
+        {% endif %}
       </ul>
       
       <div style="float:right"> 
-
+        
+        {% if user_nickname %}
         <ul class="nav navbar-nav">
         <li>    
             <span> {{ user_nickname }} <a href="{{ logout }}">logout</a></span>
         </li>
         </ul>	
+        {% else %}
+        <ul class="nav navbar-nav">
+        <li>    
+            <span> Login with <a href="#"><img src="../images/google.png"></a></span>
+        </li>
+        </ul>
+        {% endif %}
         </div>
         </div>
     </nav>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotronpost">
+    <div class="jumbotron">
       <div class="container">
         <h1 class="display-3">Nomads Travels!</h1>
         <p>Search for your preferred location!</p>
@@ -62,70 +72,21 @@
       </div>
     </div>
 
-<div class="container">
+    <div class="container">
       <!-- Example row of columns -->
-       <form action="/post" method="post">
-  <div class="form-group row">
-    <label for="country" class="col-sm-2 form-control-label">Country</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" name="country" placeholder="Enter Country Here!">
-    </div>
-  </div>
-  <div class="form-group row">
-    <label for="location" class="col-sm-2 form-control-label">Location/Activity</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" name="location" placeholder="Enter Location Here!">
-    </div>
-  </div>
-  <div class="form-group row">
-    <label for="review" class="col-sm-2 form-control-label">Review</label>
-    <div class="col-sm-10">
-      <textarea class="form-control" name="review" rows="5" placeholder="Enter Comments Here!"></textarea> 
-    </div>
-  </div>
-  <div class="form-group row">
-    <label class="col-sm-2">Ratings (1-5) </label>
-    <div class="col-sm-10">
-      <div class="radio">
-        <label class="radio-inline">
-          <input type="radio" name="ratings" value="1" checked>
-          1
-        </label>
+      <div class="row">
+       <div class="col-md-12">
+       <p> hello </p>
+	     <p>Author: {{author}}</p>
+       <p>HELLO AGAIN</p>
+       <p>Country: {{country}}</p>
+       <p>Location: {{location}} </p>
+       <p>Review: {{review}} </p>
+       <p>Rating: {{rating}} </p>
+       <p>Date: {{date}} </p>
+	</div>
       </div>
-      <div class="radio">
-        <label class="radio-inline">
-          <input type="radio" name="ratings" value="2" checked>
-          2
-        </label>
       </div>
-      <div class="radio">
-        <label class="radio-inline">
-          <input type="radio" name="ratings" value="3" checked>
-          3
-        </label>
-      </div>
-      <div class="radio">
-        <label class="radio-inline">
-          <input type="radio" name="ratings" value="4" checked>
-          4
-        </label>
-      </div>
-      <div class="radio">
-        <label class="radio-inline">
-          <input type="radio" name="ratings" value="5" checked>
-          5
-        </label>
-      </div>
-    </div>
-  </div>
-  <div class="form-group row">
-    <div class="col-sm-offset-2 col-sm-10">
-      <input type="submit" class="btn btn-primary" value="Submit">
-    </div>
-  </div>
-</form>
-</div>
-
 
 
       <hr>
