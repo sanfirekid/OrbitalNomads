@@ -84,7 +84,7 @@
       <h4 class="card-title">{{ rev.location }}</h4>
       <p class="card-text"> {{ rev.Review }}</p>
       <p class="card-text"> <b>{{ rev.Rating }} </b> /5 </p>
-      <p class="card-text"><small class="text-muted">Last updated {{ rev.review_date }} by {{ rev.author }}</small></p>
+      <p class="card-text"><small class="text-muted">Posted {{ rev.review_date.strftime("%H:%M %d-%m-%Y %Z") }} by {{ rev.author }}</small></p>
     </div>
   </div>
   {% endfor %}

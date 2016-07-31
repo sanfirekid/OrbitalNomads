@@ -3,7 +3,9 @@ import webapp2
 import jinja2
 import os
 import datetime
+import pytz
 
+from pytz import timezone
 from google.appengine.api import users
 from google.appengine.ext import ndb
 
@@ -19,7 +21,6 @@ class Reviews(ndb.Model):
     Rating = ndb.IntegerProperty()
     review_date = ndb.DateTimeProperty(auto_now_add=True)
     
-    
 
 class MainPage(webapp2.RequestHandler):
     """ Handler for the front page."""
@@ -28,6 +29,11 @@ class MainPage(webapp2.RequestHandler):
         review_query = Reviews.query()
         reviews = review_query.fetch(10)
 
+        user_tz = timezone('Asia/Singapore')
+        for rev in reviews:
+            rev.review_date = rev.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
+            
+        
         user = users.get_current_user()
         if user: # signed in
             template_values = {
@@ -88,6 +94,8 @@ class ViewReviews(webapp2.RequestHandler):
         if reviewID:
             
             review = ndb.Key(urlsafe=reviewID).get()
+            user_tz = timezone('Asia/Singapore')
+            adjusted_date = review.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
             template_values = {
                 'user_nickname': users.get_current_user().nickname(),
                 'logout': users.create_logout_url(self.request.host_url),
@@ -95,7 +103,7 @@ class ViewReviews(webapp2.RequestHandler):
                 'location': review.location,
                 'review': review.Review,
                 'rating': review.Rating,
-                'date': review.review_date.strftime(""),
+                'date': adjusted_date.strftime("%H:%M %Y-%m-%d %Z"),
                 }
                 
             template = jinja_environment.get_template('reviewsIndividual.html')

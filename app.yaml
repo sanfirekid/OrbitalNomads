@@ -16,6 +16,9 @@ handlers:
 - url: /bootstrap-4.0.0-alpha.2
   static_dir: bootstrap-4.0.0-alpha.2
 
+- url: /images
+  static_dir: images
+
 - url: /post
   script: travelNomads.app
   login: required
