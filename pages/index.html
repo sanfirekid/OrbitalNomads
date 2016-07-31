@@ -79,12 +79,14 @@
        {% if reviews %} 
 	  <div class="card-columns">
 	  {% for rev in reviews %}
-  <div class="card">
+  
+  <div class="card" >
     <h3 class="card-header">{{rev.country}}</h3>
     <div class="card-block">
       <h4 class="card-title">{{ rev.location }}</h4>
       <p class="card-text"> {{ rev.Review }}</p>
       <p class="card-text"> <b>{{ rev.Rating }} </b> /5 </p>
+      <a href="/reviews?reviewid={{rev.key.urlsafe()}}"><p class="card-text">Go to this review!</p></a>
       <p class="card-text"><small class="text-muted">Posted {{ rev.review_date.strftime("%H:%M %d-%m-%Y %Z") }} by {{ rev.author }}</small></p>
     </div>
   </div>

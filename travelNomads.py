@@ -21,6 +21,10 @@ class Reviews(ndb.Model):
     Review = ndb.StringProperty()
     Rating = ndb.IntegerProperty()
     review_date = ndb.DateTimeProperty(auto_now_add=True)
+
+    def reserve_model_ids():
+        first, last = Reviews.allocate_ids(50000)
+        return first, last
     
 
 class MainPage(webapp2.RequestHandler):
