@@ -2,13 +2,14 @@ import urllib
 import webapp2
 import jinja2
 import os
+import datetime
 
 from google.appengine.api import users
 from google.appengine.ext import ndb
 
 
 jinja_environment = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)+ "/pages"))
 
 
 class Reviews(ndb.Model):
@@ -94,7 +95,7 @@ class ViewReviews(webapp2.RequestHandler):
                 'location': review.location,
                 'review': review.Review,
                 'rating': review.Rating,
-                'date': review.review_date,
+                'date': review.review_date.strftime(""),
                 }
                 
             template = jinja_environment.get_template('reviewsIndividual.html')
