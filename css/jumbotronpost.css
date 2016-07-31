@@ -1,0 +1,10 @@
+body {
+  padding-bottom: 2rem;
+}
+.jumbotronpost{
+  width: 100%;
+  height: 300px; 
+  top:0;
+  left:0;
+    background-image: url("../images/beach.jpg");
+}

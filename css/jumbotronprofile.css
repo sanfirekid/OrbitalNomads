@@ -1,0 +1,12 @@
+body {
+  padding-bottom: 2rem;
+}
+
+.image{
+  width: 30px;
+  height: 30px;
+  border-radius: 50%; 
+  background-image: url("path/to/image");
+  background-position: center center;
+  background-size: cover;
+}
