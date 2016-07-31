@@ -6,6 +6,7 @@ import os
 from google.appengine.api import users
 from google.appengine.ext import ndb
 
+
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
@@ -69,16 +70,45 @@ class PostReview(webapp2.RequestHandler):
                          location=self.request.get('location'),
                          Review=self.request.get('review'),
                          Rating=int(self.request.get('ratings')))
-        review.put()
+        reviewID = review.put()
         template_values = {
             'user_nickname': users.get_current_user().nickname(),
             'logout': users.create_logout_url(self.request.host_url),
              }
         template = jinja_environment.get_template('profile.html')
-        self.response.out.write(template.render(template_values))
+        self.redirect('/reviews?reviewid=%s'%reviewID.urlsafe())
         
+class ViewReviews(webapp2.RequestHandler):
+
+    def get(self):
+        user = users.get_current_user()
+        reviewID = self.request.get('reviewid')
         
+        if reviewID:
+            
+            review = ndb.Key(urlsafe=reviewID).get()
+            template_values = {
+                'user_nickname': users.get_current_user().nickname(),
+                'logout': users.create_logout_url(self.request.host_url),
+                'author': review.author,
+                'location': review.location,
+                'review': review.Review,
+                'rating': review.Rating,
+                'date': review.review_date,
+                }
+                
+            template = jinja_environment.get_template('reviewsIndividual.html')
+            self.response.out.write(template.render(template_values))
+        else:
+            template_values= {
+                'user_nickname': users.get_current_user().nickname(),
+                'logout': users.create_logout_url(self.request.host_url),
+                }
+            template = jinja_environment.get_template('profile.html')
+            self.response.out.write(template.render(template_values))
+    
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/profile', LoginSucessPage),
-                               ('/post', PostReview)],
+                               ('/post', PostReview),
+                               ('/reviews', ViewReviews)],
                               debug=True)
