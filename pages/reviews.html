@@ -11,10 +11,10 @@
     <title>Nomad Travels!</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="bootstrap-4.0.0-alpha.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../bootstrap-4.0.0-alpha.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/jumbotron.css" rel="stylesheet">
+    <link href="../css/jumbotron.css" rel="stylesheet">
   </head>
 
   <body>
@@ -25,18 +25,21 @@
       <a class="navbar-brand" href="/">Nomads</a>
       </div>
       <ul class="nav navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-        </li>
         <li class="nav-item">
-          <a class="nav-link" href="/#about">About</a>
+          <a class="nav-link" href="/#about">About<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/#contact">Contact</a>
         </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Reviews</a>
+        </li>
         {% if user_nickname %}
         <li class="nav-item">
-        <a class="nav-link" href="/post">Post</a>
+          <a class="nav-link" href="/profile">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/post">Post</a>
         </li>
         {% endif %}
       </ul>
@@ -52,7 +55,7 @@
         {% else %}
         <ul class="nav navbar-nav">
         <li>    
-            <span> Login with <a href="#"><img src="../images/google.png"></a></span>
+            <span> Login with <a href="/profile"><img src="../images/google.png"></a></span>
         </li>
         </ul>
         {% endif %}
@@ -73,26 +76,41 @@
     </div>
 
     <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h2> All Reviews that have been posted!</h2>
+      </div>
+    </div>
       <!-- Example row of columns -->
       <div class="row">
        <div class="col-md-12">
-       <p> hello </p>
-	     <p>Author: {{author}}</p>
-       <p>HELLO AGAIN</p>
-       <p>Country: {{country}}</p>
-       <p>Location: {{location}} </p>
-       <p>Review: {{review}} </p>
-       <p>Rating: {{rating}} </p>
-       <p>Date: {{date}} </p>
-	    </div>
-      </div>
-      </div>
+       {% if reviews %} 
+	  <div class="card-columns">
+	  {% for rev in reviews %}
+  
+  <div class="card" >
+    <h3 class="card-header">{{rev.country}}</h3>
+    <div class="card-block">
+      <h4 class="card-title">{{ rev.location }}</h4>
+      <p class="card-text"> {{ rev.Review }}</p>
+      <p class="card-text"> <b>{{ rev.Rating }} </b> /5 </p>
+      <a href="/reviews?reviewid={{rev.key.urlsafe()}}"><p class="card-text" align="right">See the full review!</p></a>
+      <p class="card-text"><small class="text-muted">Posted {{ rev.review_date.strftime("%H:%M %d-%m-%Y %Z") }} by {{ rev.author }}</small></p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+   {% else %}
 
+   <p> No reviews posted! </p>
+
+   {% endif %}
+</div>
 
       <hr>
 
       <footer>
-        <p>&copy; Company 2015</p>
+        <p>&copy;Nomads Company 2016</p>
       </footer>
     </div> <!-- /container -->
 

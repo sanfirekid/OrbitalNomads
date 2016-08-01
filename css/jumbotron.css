@@ -1,7 +1,7 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
   padding-bottom: 2rem;
-    background-color:silver;
+background-color:silver;
 background-image: 
 radial-gradient(circle at 100% 150%, silver 24%, white 25%, white 28%, silver 29%, silver 36%, white 36%, white 40%, transparent 40%, transparent),
 radial-gradient(circle at 0    150%, silver 24%, white 25%, white 28%, silver 29%, silver 36%, white 36%, white 40%, transparent 40%, transparent),
@@ -11,10 +11,15 @@ radial-gradient(circle at 0    50%, white 5%, silver 6%, silver 15%, white 16%, 
 background-size:100px 50px;
 }
 .jumbotron{
-    position: fixed;
   width: 100%;
-  height: 350px; 
+  height: 50%; 
   top:0;
   left:0;
-    background-image: url("../images/beach.jpg");
+  background-image: url("../images/beach.jpg");
+}
+
+.readableBG{
+	width:80%;
+	background-color: white;
+	z-index: 10;
 }

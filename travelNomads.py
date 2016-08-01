@@ -37,6 +37,8 @@ class MainPage(webapp2.RequestHandler):
         user_tz = timezone('Asia/Singapore')
         for rev in reviews:
             rev.review_date = rev.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
+            if len(rev.Review)>50:
+                rev.Review = (rev.Review[:50] + "...")
             
         
         user = users.get_current_user()
@@ -116,12 +118,17 @@ class ViewReviews(webapp2.RequestHandler):
             template = jinja_environment.get_template('reviewsIndividual.html')
             self.response.out.write(template.render(template_values))
         else:
+            review_query = Reviews.query()
+            reviews = review_query.fetch()
             template_values= {
                 'user_nickname': users.get_current_user().nickname(),
                 'logout': users.create_logout_url(self.request.host_url),
+                'reviews': reviews
                 }
-            template = jinja_environment.get_template('profile.html')
+            template = jinja_environment.get_template('reviews.html')
             self.response.out.write(template.render(template_values))
+
+class SeachResults(webapp2.RequestHandler):
     
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/profile', LoginSucessPage),
