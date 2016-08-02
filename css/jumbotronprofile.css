@@ -1,12 +1,21 @@
 body {
   padding-bottom: 2rem;
+    background-color: black;
+    color: white;
+
+}
+.jumbotron{
+  width: 100%;
+  height: 50%; 
+  top:0;
+  left:0;
+  background-image: url("../images/stars.jpg");
 }
 
-.image{
-  width: 30px;
-  height: 30px;
-  border-radius: 50%; 
-  background-image: url("path/to/image");
-  background-position: center center;
-  background-size: cover;
+h1.display-3{
+    color: white!important;
+}
+
+.jumbotron p{
+    color: white!imporant;
 }
