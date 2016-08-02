@@ -11,10 +11,10 @@
     <title>Nomad Travels!</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="bootstrap-4.0.0-alpha.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../bootstrap-4.0.0-alpha.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/jumbotron.css" rel="stylesheet">
+    <link href="../css/jumbotronreviewIndiv.css" rel="stylesheet">
   </head>
 
   <body>
@@ -85,14 +85,14 @@
        <p>Review: {{review}} </p>
        <p>Rating: {{rating}} </p>
        <p>Posted: {{date}} </p>
-           <form>
-            <div class="input-group">
-              <div class="input-group-btn">
-                <button class="btn btn-default">+1</button><button class="btn btn-default"><i class="glyphicon glyphicon-share"></i></button>
-              </div>
-              <input class="form-control" placeholder="Add a comment.." type="text">
+            <form class="form-inline" role="form">
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Your comments" />
             </div>
-          </form>
+            <div class="form-group">
+                <button class="btn btn-default">Add</button>
+            </div>
+        </form>
 	    </div>
       </div>
       </div>
@@ -101,7 +101,7 @@
       <hr>
 
       <footer>
-        <p>&copy; Company 2015</p>
+        <p>&copy; Nomads Company 2016</p>
       </footer>
     </div> <!-- /container -->
 

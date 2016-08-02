@@ -14,7 +14,7 @@
     <link href="../bootstrap-4.0.0-alpha.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../css/jumbotron.css" rel="stylesheet">
+    <link href="../css/jumbotronreview.css" rel="stylesheet">
   </head>
 
   <body>
@@ -87,9 +87,8 @@
        {% if reviews %} 
 	  <div class="card-columns">
 	  {% for rev in reviews %}
-  
-  <div class="card" >
-    <h3 class="card-header">{{rev.country}}</h3>
+  <div class="card card-inverse"style="background-color: #333; border-color: #333;" >
+    <h3 class="card-header card-inverse"style ="background-color: #333;">{{rev.country}}</h3>
     <div class="card-block">
       <h4 class="card-title">{{ rev.location }}</h4>
       <p class="card-text"> {{ rev.Review }}</p>
