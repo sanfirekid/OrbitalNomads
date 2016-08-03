@@ -13,8 +13,13 @@ body {
     background-image: url("../images/stars.jpg");
 }
 
-.container-profile{
+.row{
     border-style: solid;
     border-color: white;
+    border-spacing: 4px;
+    padding: 10px;
 }
-
+.col{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
