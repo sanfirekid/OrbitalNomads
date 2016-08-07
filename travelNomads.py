@@ -31,7 +31,7 @@ class MainPage(webapp2.RequestHandler):
     """ Handler for the front page."""
 
     def get(self):
-        review_query = Reviews.query()
+        review_query = Reviews.query().order(-Reviews.review_date)
         reviews = review_query.fetch(10)
 
         user_tz = timezone('Asia/Singapore')
@@ -56,6 +56,12 @@ class MainPage(webapp2.RequestHandler):
                 }
             template = jinja_environment.get_template('index.html')
             self.response.out.write(template.render(template_values))
+
+    def post(self):
+        searchQueryText = self.request.get('search')
+        
+        self.redirect('/search?query=%s'%searchQueryText)
+        
 
 class LoginSucessPage(webapp2.RequestHandler):
 
@@ -86,11 +92,6 @@ class PostReview(webapp2.RequestHandler):
                          Review=self.request.get('review'),
                          Rating=int(self.request.get('ratings')))
         reviewID = review.put()
-        template_values = {
-            'user_nickname': users.get_current_user().nickname(),
-            'logout': users.create_logout_url(self.request.host_url),
-             }
-        template = jinja_environment.get_template('profile.html')
         self.redirect('/reviews?reviewid=%s'%reviewID.urlsafe())
         
 class ViewReviews(webapp2.RequestHandler):
@@ -98,40 +99,112 @@ class ViewReviews(webapp2.RequestHandler):
     def get(self):
         user = users.get_current_user()
         reviewID = self.request.get('reviewid')
-        
-        if reviewID:
-            
-            review = ndb.Key(urlsafe=reviewID).get()
-            user_tz = timezone('Asia/Singapore')
-            adjusted_date = review.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
+
+        if user:
+            if reviewID:
+                
+                review = ndb.Key(urlsafe=reviewID).get()
+                user_tz = timezone('Asia/Singapore')
+                adjusted_date = review.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
+                template_values = {
+                    'user_nickname': users.get_current_user().nickname(),
+                    'logout': users.create_logout_url(self.request.host_url),
+                    'country': review.country,
+                    'author': review.author,
+                    'location': review.location,
+                    'review': review.Review,
+                    'rating': review.Rating,
+                    'date': adjusted_date.strftime("%H:%M %d-%m-%Y %Z"),
+                    }
+                    
+                template = jinja_environment.get_template('reviewsIndividual.html')
+                self.response.out.write(template.render(template_values))
+            else:
+                review_query = Reviews.query().order(-Reviews.review_date)
+                reviews = review_query.fetch()
+
+                user_tz = timezone('Asia/Singapore')
+                for rev in reviews:
+                    rev.review_date = rev.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
+                    if len(rev.Review)>50:
+                        rev.Review = (rev.Review[:50] + "...")
+                        
+                template_values = {
+                    'user_nickname': users.get_current_user().nickname(),
+                    'logout': users.create_logout_url(self.request.host_url),
+                    'reviews': reviews
+                    }
+                template = jinja_environment.get_template('reviews.html')
+                self.response.out.write(template.render(template_values))
+        else:
+            if reviewID:
+                
+                review = ndb.Key(urlsafe=reviewID).get()
+                user_tz = timezone('Asia/Singapore')
+                adjusted_date = review.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
+                template_values = {
+                    'country': review.country,
+                    'author': review.author,
+                    'location': review.location,
+                    'review': review.Review,
+                    'rating': review.Rating,
+                    'date': adjusted_date.strftime("%H:%M %d-%m-%Y %Z"),
+                    }
+                    
+                template = jinja_environment.get_template('reviewsIndividual.html')
+                self.response.out.write(template.render(template_values))
+            else:
+                review_query = Reviews.query().order(-Reviews.review_date)
+                reviews = review_query.fetch()
+
+                user_tz = timezone('Asia/Singapore')
+                for rev in reviews:
+                    rev.review_date = rev.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
+                    if len(rev.Review)>50:
+                        rev.Review = (rev.Review[:50] + "...")
+                        
+                template_values = {
+                    'reviews': reviews
+                    }
+                template = jinja_environment.get_template('reviews.html')
+                self.response.out.write(template.render(template_values))
+
+                
+class SearchResults(webapp2.RequestHandler):
+
+    def get(self):
+        user = users.get_current_user()
+        query = self.request.get('query')
+        review_query = Reviews.query(ndb.OR(Reviews.country==query,
+                                            Reviews.location==query)).order(
+                                                -Reviews.review_date)
+        search_results = review_query.fetch()
+
+        user_tz = timezone('Asia/Singapore')
+        for rev in review_query:
+            rev.review_date = rev.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
+            if len(rev.Review)>50:
+                    rev.Review = (rev.Review[:50] + "...")
+        if user:
             template_values = {
                 'user_nickname': users.get_current_user().nickname(),
                 'logout': users.create_logout_url(self.request.host_url),
-                'country': review.country,
-                'author': review.author,
-                'location': review.location,
-                'review': review.Review,
-                'rating': review.Rating,
-                'date': adjusted_date.strftime("%H:%M %d-%m-%Y %Z"),
-                }
-                
-            template = jinja_environment.get_template('reviewsIndividual.html')
-            self.response.out.write(template.render(template_values))
-        else:
-            review_query = Reviews.query()
-            reviews = review_query.fetch()
-            template_values= {
-                'user_nickname': users.get_current_user().nickname(),
-                'logout': users.create_logout_url(self.request.host_url),
-                'reviews': reviews
+                'reviews': search_results
                 }
             template = jinja_environment.get_template('reviews.html')
             self.response.out.write(template.render(template_values))
+        else:
+            template_values = {
+                'reviews': search_results
+                }
 
-class SeachResults(webapp2.RequestHandler):
-    
+            template = jinja.environment.get_template('reviews.html')
+            self.response.out.write(template.render(template_values))
+
+            
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/profile', LoginSucessPage),
                                ('/post', PostReview),
-                               ('/reviews', ViewReviews)],
+                               ('/reviews', ViewReviews),
+                               ('/search', SearchResults)],
                               debug=True)
