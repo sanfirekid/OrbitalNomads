@@ -17,7 +17,9 @@ jinja_environment = jinja2.Environment(
 class Reviews(ndb.Model):
     author = ndb.StringProperty()
     country = ndb.StringProperty()
+    Country_lower = ndb.ComputedProperty(lambda self: self.country.lower())
     location = ndb.StringProperty()
+    Location_lower = ndb.ComputedProperty(lambda self: self.location.lower())
     Review = ndb.StringProperty()
     Rating = ndb.IntegerProperty()
     review_date = ndb.DateTimeProperty(auto_now_add=True)
@@ -175,8 +177,9 @@ class SearchResults(webapp2.RequestHandler):
     def get(self):
         user = users.get_current_user()
         query = self.request.get('query')
-        review_query = Reviews.query(ndb.OR(Reviews.country==query,
-                                            Reviews.location==query)).order(
+        query_lower = query.lower()
+        review_query = Reviews.query(ndb.OR(Reviews.Country_lower==query_lower,
+                                            Reviews.Location_lower==query_lower)).order(
                                                 -Reviews.review_date)
         search_results = review_query.fetch()
 

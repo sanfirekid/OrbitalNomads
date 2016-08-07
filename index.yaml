@@ -12,6 +12,18 @@ indexes:
 
 - kind: Reviews
   properties:
+  - name: Country_lower
+  - name: review_date
+    direction: desc
+
+- kind: Reviews
+  properties:
+  - name: Location_lower
+  - name: review_date
+    direction: desc
+
+- kind: Reviews
+  properties:
   - name: country
   - name: review_date
     direction: desc
