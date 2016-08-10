@@ -201,7 +201,7 @@ class SearchResults(webapp2.RequestHandler):
                 'reviews': search_results
                 }
 
-            template = jinja.environment.get_template('reviews.html')
+            template = jinja_environment.get_template('reviews.html')
             self.response.out.write(template.render(template_values))
 
             

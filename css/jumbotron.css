@@ -20,9 +20,3 @@ h1.display-3{
 .jumbotron p{
     color: white!imporant;
 }
-
-.readableBG{
-	width:80%;
-	background-color: white;
-	z-index: 10;
-}
