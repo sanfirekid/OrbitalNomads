@@ -87,7 +87,7 @@
       <h4 class="card-title">{{ rev.location }}</h4>
       <p class="card-text"> {{ rev.Review }}<br>
       Rating : <b> {{ rev.Rating }} </b> /5 <br>
-      <a href="/reviews?reviewid={{rev.key.urlsafe()}}"><span align="right">See the full review!</span></a></p>
+      <a href="/reviews?reviewid={{rev.key.id()}}"><span align="right">See the full review!</span></a></p>
       <p class="card-text"><small class="text-muted">Posted {{ rev.review_date.strftime("%H:%M %d-%m-%Y %Z") }} by {{ rev.author }}</small></p>
     </div>
   </div>

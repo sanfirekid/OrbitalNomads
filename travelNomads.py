@@ -23,10 +23,8 @@ class Reviews(ndb.Model):
     Review = ndb.StringProperty()
     Rating = ndb.IntegerProperty()
     review_date = ndb.DateTimeProperty(auto_now_add=True)
-
-    def reserve_model_ids():
-        first, last = Reviews.allocate_ids(50000)
-        return first, last
+    
+#class UserProfile(ndb.Model):
     
 
 class MainPage(webapp2.RequestHandler):
@@ -88,8 +86,8 @@ class PostReview(webapp2.RequestHandler):
                          location=self.request.get('location'),
                          Review=self.request.get('review'),
                          Rating=int(self.request.get('ratings')))
-        reviewID = review.put()
-        self.redirect('/reviews?reviewid=%s'%reviewID.urlsafe())
+        reviewID = review.put().id()
+        self.redirect('/reviews?reviewid=%s'%reviewID)
         
 class ViewReviews(webapp2.RequestHandler):
 
@@ -99,8 +97,8 @@ class ViewReviews(webapp2.RequestHandler):
 
         if user:
             if reviewID:
-                
-                review = ndb.Key(urlsafe=reviewID).get()
+
+                review = Reviews.get_by_id(int(reviewID))
                 user_tz = timezone('Asia/Singapore')
                 adjusted_date = review.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
                 template_values = {
@@ -136,7 +134,7 @@ class ViewReviews(webapp2.RequestHandler):
         else:
             if reviewID:
                 
-                review = ndb.Key(urlsafe=reviewID).get()
+                review = Review.get_by_id(int(reviewID))
                 user_tz = timezone('Asia/Singapore')
                 adjusted_date = review.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
                 template_values = {
