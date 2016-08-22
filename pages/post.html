@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -15,6 +15,7 @@
 
     <!-- Custom styles for this template -->
     <link href="../css/jumbotronpost.css" rel="stylesheet">
+    <link href="../css/jumbotron.css" rel="stylesheet">
   </head>
 
   <body>
@@ -27,9 +28,6 @@
       <ul class="nav navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="/#about">About<span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/#contact">Contact</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/reviews">Reviews</a>
@@ -54,9 +52,13 @@
     </nav>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotronpost">
+    <div class="jumbotron">
       <div class="container">
           <h1 class="display-3">Nomads Travels!</h1>
+          <p>Search for your preferred location!</p>
+          <form action='/search' method='post' class="navbar-search pull-left">
+          <input type="text" class="search-query" name='search' placeholder="Search">
+          </form>
       </div>
     </div>
 

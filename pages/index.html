@@ -30,9 +30,6 @@
           <a class="nav-link" href="#about">About<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#contact">Contact</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="/reviews">Reviews</a>
         </li>
         {% if user_nickname %}
@@ -70,11 +67,13 @@
         <h1 class="display-3">Nomads Travels!</h1>
         <p>Search for your preferred location!</p>
         <!-- add a search bar-->
-        <form action='/' method='post' class="navbar-search pull-left">
-  <input type="text" style="color: black;" class="search-query" name='search' placeholder="Search">
+        <form action='/search' method='post' class="navbar-search pull-left">
+  <input type="text" class="search-query" name='search' placeholder="Search">
 </form>
       </div>
     </div>
+
+
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
@@ -87,7 +86,7 @@
     <div class="card-block">
       <h4 class="card-title">{{ rev.location }}</h4>
       <p class="card-text"> {{ rev.Review }}<br>
-      <b>{{ rev.Rating }} </b> /5 <br>
+      Rating : <b> {{ rev.Rating }} </b> /5 <br>
       <a href="/reviews?reviewid={{rev.key.urlsafe()}}"><span align="right">See the full review!</span></a></p>
       <p class="card-text"><small class="text-muted">Posted {{ rev.review_date.strftime("%H:%M %d-%m-%Y %Z") }} by {{ rev.author }}</small></p>
     </div>
@@ -100,27 +99,34 @@
 
    {% endif %}
 </div>
+</div>
+</div>
+  <div class="aboutBanner">
+  <div class="container">
       <div class="row">
         <div class="col-md-12">
-	  <a name="about"></a><h2>About</h2>
+	  <a name="about"></a><h1>About</h1>
 
-	  <p>TripNomads is an app made to allow people to write reviews on thier own experiences travelling overseas, where others could read it. </p>
+	  <p>TripNomads is an app made to allow people to share thier own travelling experiences, be it locally or overseas! <br>
+    Be apart of our community today!</p>
 
+    <a href="/post" class="btn btn-primary" role="button" style="float: center">Login and Write a Review!</a>
+    <a class="btn btn-primary" href="/reviews" role="button">Browse Reviews!</a>
 	    </div>
       </div>
-
-
-      <div class="row">
-        <div class="col-md-12">
-	  <a name="contact"></a><h2>Contact</h2>
+     
+      
       </div>
 
-      <hr>
+
+    </div> <!-- /container -->
+    <div class ="container">
+     <hr>
 
       <footer>
         <p>&copy;Nomads Company 2016</p>
       </footer>
-    </div> <!-- /container -->
+      </div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

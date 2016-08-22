@@ -58,11 +58,6 @@ class MainPage(webapp2.RequestHandler):
                 }
             template = jinja_environment.get_template('index.html')
             self.response.out.write(template.render(template_values))
-
-    def post(self):
-        searchQueryText = self.request.get('search')
-        
-        self.redirect('/search?query=%s'%searchQueryText)
         
 
 class LoginSucessPage(webapp2.RequestHandler):
@@ -204,6 +199,10 @@ class SearchResults(webapp2.RequestHandler):
             template = jinja_environment.get_template('reviews.html')
             self.response.out.write(template.render(template_values))
 
+    def post(self):
+        searchQueryText = self.request.get('search')
+        
+        self.redirect('/search?query=%s'%searchQueryText)
             
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/profile', LoginSucessPage),
