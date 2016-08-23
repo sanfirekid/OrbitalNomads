@@ -7,7 +7,9 @@ import pytz
 
 from pytz import timezone
 from google.appengine.api import users
+from google.appengine.api import images
 from google.appengine.ext import ndb
+
 
 
 jinja_environment = jinja2.Environment(
@@ -24,9 +26,17 @@ class Reviews(ndb.Model):
     Rating = ndb.IntegerProperty()
     review_date = ndb.DateTimeProperty(auto_now_add=True)
     
-#class UserProfile(ndb.Model):
+class UserProfile(ndb.Model):
+    email = ndb.StringProperty()
+    avatar = ndb.BlobProperty()
     
-
+class Comments(ndb.Model):
+    #reviewID = ndb.IntegerProperty()
+    comments = ndb.StringProperty()
+    comment_author = ndb.StringProperty()
+    comment_date = ndb.DateTimeProperty(auto_now_add=True)
+    
+    
 class MainPage(webapp2.RequestHandler):
     """ Handler for the front page."""
 
@@ -61,11 +71,38 @@ class MainPage(webapp2.RequestHandler):
 class LoginSucessPage(webapp2.RequestHandler):
 
     def get(self):
-        user = users.get_current_user()
+        currentUser = ndb.Key('UserProfile', users.get_current_user().nickname())
+        user = currentUser.get()
+
+        if user == None:
+            user = UserProfile(id=users.get_current_user().nickname())
+            user.email = users.get_current_user().email()
+            user.put()
+                              
         template_values = {
             'user_nickname': users.get_current_user().nickname(),
+            'user_profile': user,
             'logout': users.create_logout_url(self.request.host_url),
              }
+        template = jinja_environment.get_template('profile.html')
+        self.response.out.write(template.render(template_values))
+
+    def post(self):
+        currentUser = ndb.Key('UserProfile', users.get_current_user().nickname())
+        user = currentUser.get()
+
+        avatar = self.request.get('imgUpload')
+        if avatar:
+            avatar = images.resize(avatar, 32, 32)
+            user.avatar = avatar
+            user.put()
+
+
+        template_values = {
+           'user_nickname': users.get_current_user().nickname(),
+           'user_profile': user,
+           'logout': users.create_logout_url(self.request.host_url),
+            }   
         template = jinja_environment.get_template('profile.html')
         self.response.out.write(template.render(template_values))
         
@@ -101,6 +138,11 @@ class ViewReviews(webapp2.RequestHandler):
                 review = Reviews.get_by_id(int(reviewID))
                 user_tz = timezone('Asia/Singapore')
                 adjusted_date = review.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
+
+                comment_query = Comments.query(ancestor=review.key)
+                
+                comments_all = comment_query.fetch()
+                
                 template_values = {
                     'user_nickname': users.get_current_user().nickname(),
                     'logout': users.create_logout_url(self.request.host_url),
@@ -110,6 +152,7 @@ class ViewReviews(webapp2.RequestHandler):
                     'review': review.Review,
                     'rating': review.Rating,
                     'date': adjusted_date.strftime("%H:%M %d-%m-%Y %Z"),
+                    'comments': comments_all
                     }
                     
                 template = jinja_environment.get_template('reviewsIndividual.html')
@@ -134,7 +177,7 @@ class ViewReviews(webapp2.RequestHandler):
         else:
             if reviewID:
                 
-                review = Review.get_by_id(int(reviewID))
+                review = Reviews.get_by_id(int(reviewID))
                 user_tz = timezone('Asia/Singapore')
                 adjusted_date = review.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
                 template_values = {
@@ -164,6 +207,22 @@ class ViewReviews(webapp2.RequestHandler):
                 template = jinja_environment.get_template('reviews.html')
                 self.response.out.write(template.render(template_values))
 
+    def post(self):
+        user = users.get_current_user()
+        reviewID = self.request.get('reviewid')
+
+        if user:
+            if reviewID:
+
+                reviewKey = Reviews.get_by_id(int(reviewID)).key
+                comment = Comments(parent=reviewKey,
+                                   comments = self.request.get('comments'),
+                                   comment_author = users.get_current_user().nickname())
+                comment.put()
+                
+                self.redirect('/reviews?reviewid=%s'%reviewID)
+            else:
+                self.redirect('/reviews')
                 
 class SearchResults(webapp2.RequestHandler):
 
@@ -177,7 +236,7 @@ class SearchResults(webapp2.RequestHandler):
         search_results = review_query.fetch()
 
         user_tz = timezone('Asia/Singapore')
-        for rev in review_query:
+        for rev in search_results:
             rev.review_date = rev.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
             if len(rev.Review)>50:
                     rev.Review = (rev.Review[:50] + "...")
