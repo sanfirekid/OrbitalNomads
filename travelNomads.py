@@ -26,7 +26,7 @@ class Reviews(ndb.Model):
     Rating = ndb.IntegerProperty()
     author_email = ndb.StringProperty()
     tour_guide = ndb.StringProperty()
-    review_date = ndb.DateTimeProperty(auto_now_add=True)
+    review_date = ndb.DateTimeProperty(auto_now=True)
     
 class UserProfile(ndb.Model):
     email = ndb.StringProperty()
@@ -76,6 +76,16 @@ class LoginSucessPage(webapp2.RequestHandler):
         currentUser = ndb.Key('UserProfile', users.get_current_user().nickname())
         user = currentUser.get()
 
+        review_query = Reviews.query(Reviews.author==users.get_current_user().nickname()).order(Reviews.review_date)
+
+        reviews = review_query.fetch()
+        user_tz = timezone('Asia/Singapore')
+        for rev in reviews:
+            rev.review_date = rev.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
+            if len(rev.Review)>50:
+                rev.Review = (rev.Review[:50] + "...")
+
+                
         if user == None:
             user = UserProfile(id=users.get_current_user().nickname())
             user.email = users.get_current_user().email()
@@ -85,6 +95,7 @@ class LoginSucessPage(webapp2.RequestHandler):
             'user_nickname': users.get_current_user().nickname(),
             'user_profile': user,
             'logout': users.create_logout_url(self.request.host_url),
+            'reviews': reviews
              }
         template = jinja_environment.get_template('profile.html')
         self.response.out.write(template.render(template_values))
@@ -107,6 +118,54 @@ class LoginSucessPage(webapp2.RequestHandler):
             }   
         template = jinja_environment.get_template('profile.html')
         self.response.out.write(template.render(template_values))
+
+class DeleteReview(webapp2.RequestHandler):
+
+    def get(self):
+        reviewID = self.request.get('reviewid')
+
+        review = Reviews.get_by_id(int(reviewID))
+        review.key.delete()
+        
+        self.redirect('/profile')
+        
+
+class EditReview(webapp2.RequestHandler):
+
+    def get(self):
+        reviewID = self.request.get('reviewid')
+
+        review = Reviews.get_by_id(int(reviewID))
+        
+        user = users.get_current_user()
+        template_values = {
+            'user_nickname': users.get_current_user().nickname(),
+            'country': review.country,
+            'location': review.location,
+            'review': review.Review,
+            'tour_guide': review.tour_guide,
+            'rating': review.Rating,
+            'logout': users.create_logout_url(self.request.host_url),
+            
+             }
+        template = jinja_environment.get_template('post.html')
+        self.response.out.write(template.render(template_values))
+
+    def post(self):
+        reviewID = self.request.get('reviewid')
+
+        review = Reviews.get_by_id(int(reviewID))
+
+        review.country = self.request.get('country')
+        review.location = self.request.get('location')
+        review.Review = self.request.get('review')
+        review.tour_guide = self.request.get('tourSelect')
+        review.Rating = int(self.request.get('ratings'))
+
+        review.put()
+
+        self.redirect('/reviews?reviewid=%s'%reviewID)
+                            
         
 class PostReview(webapp2.RequestHandler):
 
@@ -143,7 +202,7 @@ class ViewReviews(webapp2.RequestHandler):
                 user_tz = timezone('Asia/Singapore')
                 adjusted_date = review.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
 
-                comment_query = Comments.query(ancestor=review.key)
+                comment_query = Comments.query(ancestor=review.key).order(Comments.comment_date)
                 
                 comments_all = comment_query.fetch()
                 for comms in comments_all:
@@ -189,7 +248,7 @@ class ViewReviews(webapp2.RequestHandler):
                 user_tz = timezone('Asia/Singapore')
                 adjusted_date = review.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
 
-                comment_query = Comments.query(ancestor=review.key)
+                comment_query = Comments.query(ancestor=review.key).order(Comments.comment_date)
                 
                 comments_all = comment_query.fetch()
                 for comms in comments_all:
@@ -283,5 +342,7 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/profile', LoginSucessPage),
                                ('/post', PostReview),
                                ('/reviews', ViewReviews),
-                               ('/search', SearchResults)],
+                               ('/search', SearchResults),
+                               ('/delete', DeleteReview),
+                               ('/edit', EditReview)],
                               debug=True)

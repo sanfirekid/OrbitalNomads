@@ -10,6 +10,17 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: Comments
+  ancestor: yes
+  properties:
+  - name: comment_date
+
+- kind: Comments
+  ancestor: yes
+  properties:
+  - name: comment_date
+    direction: desc
+
 - kind: Reviews
   properties:
   - name: Country_lower
@@ -21,6 +32,11 @@ indexes:
   - name: Location_lower
   - name: review_date
     direction: desc
+
+- kind: Reviews
+  properties:
+  - name: author
+  - name: review_date
 
 - kind: Reviews
   properties:

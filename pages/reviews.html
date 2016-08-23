@@ -92,9 +92,9 @@
       <span style="float:right; vertical-align:top"><img src="../images/tourFlag.png"></span>
       {% endif %}
       <h4 class="card-title">{{ rev.location }}</h4>
-      <p class="card-text"> {{ rev.Review }}</p>
-      <p class="card-text"> <b>{{ rev.Rating }} </b> /5 </p>
-      <a href="/reviews?reviewid={{rev.key.id()}}"><p class="card-text" align="right">See the full review!</p></a>
+      <p class="card-text"> {{ rev.Review }}<br>
+      Rating : <b> {{ rev.Rating }} </b> /5 <br>
+      <span style="float:right"><a href="/reviews?reviewid={{rev.key.id()}}">See the full review!</a></span></p>
       <p class="card-text"><small class="text-muted">Posted {{ rev.review_date.strftime("%H:%M %d-%m-%Y %Z") }} by {{ rev.author }}</small></p>
     </div>
   </div>
