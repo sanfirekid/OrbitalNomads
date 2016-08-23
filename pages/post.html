@@ -83,12 +83,12 @@
       <textarea class="form-control" name="review" rows="5" placeholder="Enter Comments Here!"></textarea> 
     </div>
   </div>
+<!--
        <div class="form-group">
     <label for="exampleInputFile">File input</label>
     <input type="file" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp" disabled>
     <small id="fileHelp" class="form-text text-muted"></small>
   </div>    
-<!--
     <div class ="form-group row">
         <div class="fileinput fileinput-new input-group" data-provides="fileinput">
             <div class="form-control" data-trigger="fileinput">
@@ -139,6 +139,20 @@
       </div>
     </div>
   </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 form-control-label" for="tourSelect">Do you want to be a tour guide for this location?</label>
+    <div class="col-sm-3">
+    <select class="form-control" id="tourSelect" name="tourSelect">
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+    </div>
+    <div class="col-sm-3">
+    <small class="text-muted"> By saying Yes, you are consenting to provide your email as part of the review for others to contact you!</small>
+    </div>
+    </div>
+
   <div class="form-group row">
     <div class="col-sm-offset-2 col-sm-10">
       <input type="submit" class="btn btn-primary" value="Submit">

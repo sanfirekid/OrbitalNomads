@@ -24,6 +24,8 @@ class Reviews(ndb.Model):
     Location_lower = ndb.ComputedProperty(lambda self: self.location.lower())
     Review = ndb.StringProperty()
     Rating = ndb.IntegerProperty()
+    author_email = ndb.StringProperty()
+    tour_guide = ndb.StringProperty()
     review_date = ndb.DateTimeProperty(auto_now_add=True)
     
 class UserProfile(ndb.Model):
@@ -119,9 +121,11 @@ class PostReview(webapp2.RequestHandler):
 
     def post(self):
         review = Reviews(author=users.get_current_user().nickname(),
+                         author_email=users.get_current_user().email(),
                          country=self.request.get('country'),
                          location=self.request.get('location'),
                          Review=self.request.get('review'),
+                         tour_guide=self.request.get('tourSelect'),
                          Rating=int(self.request.get('ratings')))
         reviewID = review.put().id()
         self.redirect('/reviews?reviewid=%s'%reviewID)
@@ -142,6 +146,8 @@ class ViewReviews(webapp2.RequestHandler):
                 comment_query = Comments.query(ancestor=review.key)
                 
                 comments_all = comment_query.fetch()
+                for comms in comments_all:
+                    comms.comment_date = comms.comment_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
                 
                 template_values = {
                     'user_nickname': users.get_current_user().nickname(),
@@ -152,6 +158,8 @@ class ViewReviews(webapp2.RequestHandler):
                     'review': review.Review,
                     'rating': review.Rating,
                     'date': adjusted_date.strftime("%H:%M %d-%m-%Y %Z"),
+                    'tour_guide': review.tour_guide,
+                    'author_email': review.author_email,
                     'comments': comments_all
                     }
                     
@@ -180,6 +188,13 @@ class ViewReviews(webapp2.RequestHandler):
                 review = Reviews.get_by_id(int(reviewID))
                 user_tz = timezone('Asia/Singapore')
                 adjusted_date = review.review_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
+
+                comment_query = Comments.query(ancestor=review.key)
+                
+                comments_all = comment_query.fetch()
+                for comms in comments_all:
+                    comms.comment_date = comms.comment_date.replace(tzinfo=pytz.utc).astimezone(user_tz)
+
                 template_values = {
                     'country': review.country,
                     'author': review.author,
@@ -187,6 +202,9 @@ class ViewReviews(webapp2.RequestHandler):
                     'review': review.Review,
                     'rating': review.Rating,
                     'date': adjusted_date.strftime("%H:%M %d-%m-%Y %Z"),
+                    'tour_guide': review.tour_guide,
+                    'author_email': review.author_email,
+                    'comments': comments_all
                     }
                     
                 template = jinja_environment.get_template('reviewsIndividual.html')

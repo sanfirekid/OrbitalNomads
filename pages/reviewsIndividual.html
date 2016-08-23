@@ -77,23 +77,24 @@
       <!-- Example row of columns -->
       <div class="row">
        <div class="col-md-12">
-	     <p>Author: {{author}}</p>
-       <p>Country: {{country}}</p>
-       <p>Location: {{location}} </p>
-       <p>Review: {{review}} </p>
-       <p>Rating: {{rating}} </p>
-       <p>Posted: {{date}} </p>
+	     <h2>Country and Location: {{location}} in {{country}}!</h2> 
+       <p>"{{review}}" </p>
+       <p>Rating: {{rating}}/5 </p>
+       <small class="text-muted">Posted: {{date}} by {{author}}</small>
+       {% if tour_guide=='Yes' %}
+      <h5 style="color:#76EE00; padding-top:2rem;"> I can act as a tour guide for this location! Please contact me at {{author_email}} for further details!</h5>
+      {% endif %}
        </div>
        </div>
 
-       <div class="row">
+       <div class="row" style="padding-top:3rem; float: right; min-width:50%">
        <div class="col-md-12">
        <h3> Comments </h3>
             {% if comments %}
             {% for comm in comments %}
             <p> {{comm.comments}} </p>
-            <p> {{comm.comment_author}} </p>
-            <p> {{comm.comment_date}} </p>
+            <p style="text-align:right"><small> By {{comm.comment_author}} on {{comm.comment_date.strftime("%H:%M %d-%m-%Y %Z")}} </small></p>
+            <hr>
             {% endfor %}
             {% endif %}
             <form class="form-inline" role="form" action="" method="post">
@@ -105,6 +106,7 @@
                 <button type="submit" class="btn btn-primary">Add</button>
             {% else %}
                 <button class="btn btn-primary" disabled>Add</button>
+                <small class="text-muted">Please login to comment</small>
             {% endif %}
             </div>
         </form>
